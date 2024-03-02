@@ -580,6 +580,71 @@ This is the wrapper around the core package to provide support in browsers.
   </body>
 </html>
 ```
+```html
+<html>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script src="https://unpkg.com/@qrcode-js/browser"></script>
+    <script>
+      const canvas = document.getElementById("canvas");
+      const myQR = QRCode.QRCodeBrowser(canvas);
+      myQR.setOptions({
+        text: "https://github.com/qrcode-js/qrcode",
+        color: "#123456",
+        size: 450,
+        dots: {
+          scale: 1, // 1 is the normal scale; scale the dots if necessary
+          round: 1, // Full round dots
+        },
+        finder: {
+          round: 1,
+        },
+        gradient: (ctx, size) => {
+          const gradient = ctx.createLinearGradient(0, 0, size, 0);
+          gradient.addColorStop(0, "green");
+          gradient.addColorStop(0.5, "grey");
+          gradient.addColorStop(1, "red");
+          return gradient;
+        },
+        drawFunction: (
+          canvasContext,
+          left,
+          top,
+          nSize,
+          scale,
+          round,
+          parameters,
+          otherCells
+        ) => {
+          // Start drawing
+          canvasContext.beginPath();
+        
+          // Determine position
+          const x = left * nSize;
+          const y = top * nSize;
+          const size = nSize * scale;
+          
+          // Determine appearance
+          if (parameters.isTiming) {
+            // Different style for timing pattern
+            canvasContext.fillStyle = 'blue'; // Or any other color
+          } else {
+            canvasContext.fillStyle = 'black'; // Regular color
+          }
+          
+          // Draw the dot
+          canvasContext.arc(x + size / 2, y + size / 2, size / 2 * round, 0, Math.PI * 2, false);
+          canvasContext.fill();
+          
+          // End drawing
+          canvasContext.closePath();
+        },
+      });
+      myQR.draw();
+    </script>
+  </body>
+</html>
+```
 
 ### Svelte
 
